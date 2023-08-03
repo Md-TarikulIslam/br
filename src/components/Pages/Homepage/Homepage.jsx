@@ -98,7 +98,7 @@ const Homepage = () => {
         }
 
 
-        <img className='w-full' src={foo} alt="" />
+        <img className='w-full grayscale' src={foo} alt="" />
       </div>
     </div>
   )
