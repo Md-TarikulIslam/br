@@ -2,32 +2,58 @@ import React, { useState } from 'react'
 import nav from '../../../images/nav.png'
 import foo from '../../../images/foo.png'
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
+const countries = ['England', 'Denmark', 'Spain', 'Italy', 'France', 'Germany', 'Netherlands', 'Portugal', 'USA', 'Belgium', 'Sweden', 'World'];
+
+const leagues = ['UEFA Super Cup', 'Superliga', 'Premier League', 'Leagues Cup', 'FA Cup', 'Primera Division', 'UEFA Europa Conference League', 'Serie A', 'League One', 'La Liga', 'Ligue 1', 'Bundesliga', 'Eredivisie', 'Primeira Liga', 'Major League Soccer', 'Jupiler Pro League', 'Allsvenskan', 'UEFA Champions League', 'UEFA Europa League']
 
 const Homepage = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+
   const fetchStatsByDate = async () => {
+
+    const options = {
+      method: 'GET',
+      url: 'https://api-football-v1.p.rapidapi.com/v3/fixtures',
+      params: { date: selectedDate },
+      headers: {
+        'X-RapidAPI-Key': 'b6e89817d6msh36107de73277139p116779jsne307fb015e33',
+        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+      }
+    };
+
     try {
-      const response = await axios.get(`https://save-football-api.vercel.app/api/fixtures/${selectedDate}`);
-
-      setStats(response.data);
-      console.log(response.data)
-
-      console.log(response.data[0].response[0].fixture.id)
+      const response = await axios.request(options);
+      setStats(response.data.response)
+      console.log(response.data.response);
     } catch (error) {
-      console.error("Error fetching stats:", error);
+      console.error(error);
     }
   };
 
+
+  const filteredData = stats.filter(stat => countries.includes(stat.league.country) && leagues.includes(stat.league.name));
+
+
+
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
+    localStorage.setItem('date',(event.target.value))
   };
+  console.log(selectedDate)
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
     fetchStatsByDate();
   };
 
+  const handleClick = (id) => {
+    navigate(`/${id}`)
+  }
 
   return (
     <div>
@@ -51,120 +77,24 @@ const Homepage = () => {
           stats && <div className='max-w-4xl mx-auto my-5'>
             {stats.length > 0 ? (
               <div className='card card-body mb-10 bg-base-100 shadow-2xl'>
-                {stats.map((stat) => (
-                  <div key={stat.response[0].fixture.id}>
-                    <div className='flex justify-between'>
-                      <div className='flex items-center gap-5'>
-                        <p className='font-bold text-xl  '>{stat.response[0].teams.home.name}</p>
-                        <img className='w-10' src={stat.response[0].teams.home.logo} alt="" />
-                      </div>
-                      <div className='flex items-center gap-5'>
-                        <img className='w-10' src={stat.response[0].teams.away.logo} alt="" />
-                        <p className='font-bold text-xl '>{stat.response[0].teams.away.name}</p>
 
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Shots on target</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].score.halftime.home}</p><progress className="progress w-96" value={stat.response[0].score.halftime.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].score.halftime.away}</p><progress className="progress w-96" value={stat.response[0].score.halftime.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Shots off target</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].score.halftime.home}</p><progress className="progress w-96" value={stat.response[0].score.halftime.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].score.halftime.away}</p><progress className="progress w-96" value={stat.response[0].score.halftime.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Blocked Shots</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Possession (%)</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Corner Kicks</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Offsides</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Fouls</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Yellow cards</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Red cards</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Goalkeeper saves</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
-                    <p className='text-center mt-5'>Goal kicks</p>
-                    <div className='flex justify-between'>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
-                      </div>
-                    </div>
+                {filteredData.map((stat) => (
 
+                  <div key={stat.fixture.id}>
 
+                    <div className='card card-body bg-base-100 shadow hover:bg-blue-50 hover:cursor-pointer' onClick={() => handleClick(stat.fixture.id)}>
+                      <div className='flex justify-between'>
+                        <div className='flex items-center gap-5'>
+                          <p className='font-bold text-xl  '>{stat.teams.home.name}</p>
+                          <img className='w-10 h-10' src={stat.teams.home.logo} alt="" />
+                        </div>
+                        <div className='flex items-center gap-5'>
+                          <img className='w-10 h-10' src={stat.teams.away.logo} alt="" />
+                          <p className='font-bold text-xl '>{stat.teams.away.name}</p>
+
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )
                 )
