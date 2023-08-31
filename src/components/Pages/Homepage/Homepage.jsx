@@ -64,7 +64,7 @@ const Homepage = () => {
 
                       </div>
                     </div>
-                    <p className='text-center mt-5'>Half Time Goal</p>
+                    <p className='text-center mt-5'>Shots on target</p>
                     <div className='flex justify-between'>
                       <div className='flex flex-col gap-2'>
                         <p>{stat.response[0].score.halftime.home}</p><progress className="progress w-96" value={stat.response[0].score.halftime.home} max="7"></progress>
@@ -73,7 +73,88 @@ const Homepage = () => {
                         <p>{stat.response[0].score.halftime.away}</p><progress className="progress w-96" value={stat.response[0].score.halftime.away} max="7"></progress>
                       </div>
                     </div>
-                    <p className='text-center mt-5'>Total Goals</p>
+                    <p className='text-center mt-5'>Shots off target</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].score.halftime.home}</p><progress className="progress w-96" value={stat.response[0].score.halftime.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].score.halftime.away}</p><progress className="progress w-96" value={stat.response[0].score.halftime.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Blocked Shots</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Possession (%)</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Corner Kicks</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Offsides</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Fouls</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Yellow cards</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Red cards</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Goalkeeper saves</p>
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
+                      </div>
+                      <div className='flex flex-col gap-2'>
+                        <p>{stat.response[0].goals.away}</p><progress className="progress w-96" value={stat.response[0].goals.away} max="7"></progress>
+                      </div>
+                    </div>
+                    <p className='text-center mt-5'>Goal kicks</p>
                     <div className='flex justify-between'>
                       <div className='flex flex-col gap-2'>
                         <p>{stat.response[0].goals.home}</p><progress className="progress w-96" value={stat.response[0].goals.home} max="7"></progress>
