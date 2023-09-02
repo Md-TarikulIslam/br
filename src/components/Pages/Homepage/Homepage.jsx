@@ -41,7 +41,7 @@ const Homepage = () => {
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
-    localStorage.setItem('date',(event.target.value))
+   
   };
   console.log(selectedDate)
 
@@ -52,8 +52,12 @@ const Homepage = () => {
   };
 
   const handleClick = (id) => {
+    const demo = stats.find(stat=>stat.fixture.id===id)
+    localStorage.setItem('data', JSON.stringify(demo))
     navigate(`/${id}`)
   }
+
+  console.log(stats);
 
   return (
     <div>
