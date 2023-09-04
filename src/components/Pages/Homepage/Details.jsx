@@ -12,6 +12,9 @@ const Details = () => {
     const fixtureId = localStorage.getItem("fixtureId");
     const fixture = JSON.parse(data);
     const limit = [15, 15, 50, 15, 25, 25, 25, 25, 15, 100, 10, 5, 25, 1000, 750, 100, 10];
+    const title = ["Form", "Attack", "Deffence", "Poisson Distribution", "Strength", "Goals"];
+    const [date, setDate] = useState(null);
+    const [predict, setPredict] = useState([]);
 
     const fetchStatistics = async () => {
         setLoading(true);
@@ -36,8 +39,34 @@ const Details = () => {
         }
     };
 
+    const fetchPredictions = async () => {
+        setLoading(true);
+        const options = {
+            method: "GET",
+            url: "https://api-football-v1.p.rapidapi.com/v3/predictions",
+            params: { fixture: fixtureId },
+            headers: {
+                "X-RapidAPI-Key": "b6e89817d6msh36107de73277139p116779jsne307fb015e33",
+                "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+            },
+        };
+
+        try {
+            const response = await axios.request(options);
+            setPredict(response.data.response[0]);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchStatistics();
+    }, []);
+
+    useEffect(() => {
+        fetchPredictions();
     }, []);
 
     const mergedStatistics = [];
@@ -58,6 +87,39 @@ const Details = () => {
         });
     }
 
+    const covertDate = (date) => {
+        const parsedDate = new Date(date);
+
+        const ordinalSuffixes = ["th", "st", "nd", "rd"];
+
+        const day = parsedDate.getDate();
+        const dayWithSuffix = day + (ordinalSuffixes[(day - 1) % 10] || "th");
+
+        const formattedDate =
+            dayWithSuffix +
+            " " +
+            parsedDate.toLocaleDateString("en-US", {
+                month: "long", // Full month name (e.g., "September")
+                year: "numeric", // Full year (e.g., "2023")
+            });
+
+        setDate(formattedDate);
+    };
+
+    useEffect(() => {
+        covertDate(fixture.fixture.date);
+    }, []);
+
+    const newArray = [];
+    for (const key in predict.comparison) {
+        if (predict.comparison.hasOwnProperty(key)) {
+            const value = predict.comparison[key];
+            newArray.push({ key, value });
+        }
+    }
+
+    console.log(newArray);
+
     return (
         <div>
             {/* navbar */}
@@ -67,8 +129,8 @@ const Details = () => {
 
             {/* main body */}
             <main className="mx-auto max-w-screen-xl my-5">
-                <div className="card px-8 py-6 shadow bg-blue-50 hover:cursor-pointer">
-                    <div className="flex items-center">
+                <div className="card px-8 py-6 shadow bg-blue-50">
+                    <div className="flex items-center gap-10">
                         <div className="flex-1 flex items-center gap-5 justify-start">
                             <p className="font-bold text-xl">{fixture.teams.home.name}</p>
                             <img
@@ -87,6 +149,12 @@ const Details = () => {
                             <p className="font-bold text-xl ">{fixture.teams.away.name}</p>
                         </div>
                     </div>
+                    <div className="flex justify-center">
+                        <h3 className="font-bold text-lg mt-2 text-blue-700">
+                            {fixture.league.name} - {date} -{" "}
+                            {fixture.fixture.venue.city ? fixture.fixture.venue.city : "World"}
+                        </h3>
+                    </div>
                 </div>
 
                 {loading ? (
@@ -104,8 +172,7 @@ const Details = () => {
                                             <p className="text-center font-bold text-blue-600">{statistics.type}</p>
                                             <div className="flex items-center justify-between gap-3 md:gap-4 lg:gap-6">
                                                 <div className="w-full">
-                                                    <div className="flex items-center justify-between">
-                                                        <p>{statistics.limit}</p>
+                                                    <div className="text-right">
                                                         <p>{statistics.home === null ? 0 : statistics.home}</p>
                                                     </div>
                                                     <progress
@@ -126,9 +193,8 @@ const Details = () => {
                                                     ></progress>
                                                 </div>
                                                 <div className="w-full">
-                                                    <div className="flex items-center justify-between">
+                                                    <div className="text-left">
                                                         <p>{statistics.away === null ? 0 : statistics.away}</p>
-                                                        <p>{statistics.limit}</p>
                                                     </div>
                                                     <progress
                                                         className={`${
@@ -152,8 +218,70 @@ const Details = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div>
-                                <p>No statistics to display.</p>
+                            <div className="mb-14 flex flex-col items-center mt-8">
+                                <h2 className="text-xl font-bold">Head To Head</h2>
+
+                                <div className="grid gap-5 grid-cols-2 my-4">
+                                    <div className="bg-blue-500 rounded-md py-2 px-6 text-white">
+                                        <p className="font-semibold">Win Percentage</p>
+                                        <p className="text-xl font-bold">{predict?.comparison?.total?.home}</p>
+                                    </div>
+                                    <div className="bg-blue-500 rounded-md py-2 px-6 text-white">
+                                        <p className="font-semibold">Win Percentage</p>
+                                        <p className="text-xl font-bold">{predict?.comparison?.total?.home}</p>
+                                    </div>
+                                </div>
+
+                                <div className="w-full">
+                                    {newArray.map((item, idx) => (
+                                        <div key={idx} className="w-full my-6">
+                                            <p className="text-center font-bold text-blue-600">{title[idx]}</p>
+                                            <div className="flex items-center justify-between w-full gap-3 md:gap-4 lg:gap-6">
+                                                <div className="w-full">
+                                                    <div className="text-right">
+                                                        <p>{item.value.home === null ? 0 : item.value.home}</p>
+                                                    </div>
+                                                    <progress
+                                                        className={`${
+                                                            item.value.home >= item.value.away
+                                                                ? "progress_0"
+                                                                : "progress_1"
+                                                        } w-full !h-4`}
+                                                        style={{ direction: "rtl" }}
+                                                        value={
+                                                            item.value.home === null
+                                                                ? 0
+                                                                : typeof item.value.home === "string"
+                                                                ? parseInt(item.value.home.replace("%", ""))
+                                                                : item.value.home
+                                                        }
+                                                        max={100}
+                                                    ></progress>
+                                                </div>
+                                                <div className="w-full">
+                                                    <div className="text-left">
+                                                        <p>{item.value.away === null ? 0 : item.value.away}</p>
+                                                    </div>
+                                                    <progress
+                                                        className={`${
+                                                            item.value.away >= item.value.home
+                                                                ? "progress_0"
+                                                                : "progress_1"
+                                                        } w-full !h-4`}
+                                                        value={
+                                                            item.value.away === null
+                                                                ? 0
+                                                                : typeof item.value.away === "string"
+                                                                ? parseInt(item.value.away.replace("%", ""))
+                                                                : item.value.away
+                                                        }
+                                                        max={100}
+                                                    ></progress>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </>
