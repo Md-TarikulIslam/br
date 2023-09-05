@@ -126,22 +126,22 @@ const Homepage = () => {
                                         onClick={() => handleClick(stat.fixture.id)}
                                     >
                                         <div className="flex items-center">
-                                            <div className="flex-1 flex items-center gap-5 justify-start">
-                                                <p className="font-bold text-xl">{stat.teams.home.name}</p>
+                                            <div className="flex-1 flex flex-col-reverse md:flex-row items-center gap-5 justify-start">
+                                                <p className="font-bold text-center text-lg md:text-xl">{stat.teams.home.name}</p>
                                                 <img
-                                                    className="w-10 h-10"
+                                                    className="w-14 h-14"
                                                     src={stat.teams.home.logo}
                                                     alt={`${stat.teams.home.name} logo`}
                                                 />
                                             </div>
-                                            <div className="flex-1 text-center vs text-xl text-red-500">v/s</div>
-                                            <div className="flex-1 flex items-center gap-5 justify-end">
+                                            <div className="flex-1 w-fit text-center vs text-xl text-red-500">v/s</div>
+                                            <div className="flex-1 flex-col md:flex-row flex items-center gap-5 justify-end">
                                                 <img
-                                                    className="w-10 h-10"
+                                                    className="w-14 h-14"
                                                     src={stat.teams.away.logo}
                                                     alt={`${stat.teams.away.name} logo`}
                                                 />
-                                                <p className="font-bold text-xl ">{stat.teams.away.name}</p>
+                                                <p className="font-bold text-center text-lg md:text-xl">{stat.teams.away.name}</p>
                                             </div>
                                         </div>
                                     </div>
