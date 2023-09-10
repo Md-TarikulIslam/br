@@ -118,8 +118,6 @@ const Details = () => {
         }
     }
 
-    console.log(newArray);
-
     return (
         <div>
             {/* navbar */}
@@ -221,16 +219,32 @@ const Details = () => {
                             <div className="mb-14 flex flex-col items-center mt-8">
                                 <h2 className="text-xl font-bold">Head To Head</h2>
 
-                                {/* <div className="flex lg:hidden justify-evenly w-full my-4">
+                                <div className="flex justify-evenly w-full my-4">
                                     <div className="bg-blue-500 w-36 h-36 rounded-full flex justify-center items-center flex-col text-white">
-                                        <p className="font-semibold">Win Percentage</p>
-                                        <p className="text-2xl font-black">{predict?.comparison?.total?.home}</p>
+                                        <p className="font-semibold text-center">
+                                            Win
+                                            <br />
+                                            Percentage
+                                        </p>
+                                        <p className="text-2xl font-black">{predict?.predictions?.percent?.home}</p>
                                     </div>
                                     <div className="bg-blue-500 w-36 h-36 rounded-full flex justify-center items-center flex-col text-white">
-                                        <p className="font-semibold">Win Percentage</p>
-                                        <p className="text-2xl font-black">{predict?.comparison?.total?.away}</p>
+                                        <p className="font-semibold text-center">
+                                            Draw
+                                            <br />
+                                            Percentage
+                                        </p>
+                                        <p className="text-2xl font-black">{predict?.predictions?.percent?.draw}</p>
                                     </div>
-                                </div> */}
+                                    <div className="bg-blue-500 w-36 h-36 rounded-full flex justify-center items-center flex-col text-white">
+                                        <p className="font-semibold text-center">
+                                            Win
+                                            <br />
+                                            Percentage
+                                        </p>
+                                        <p className="text-2xl font-black">{predict?.predictions?.percent?.away}</p>
+                                    </div>
+                                </div>
 
                                 <div className="w-full flex justify-around items-center">
                                     {/* <div className="hidden lg:flex bg-blue-500 w-44 h-44 rounded-full justify-center items-center flex-col text-white">
