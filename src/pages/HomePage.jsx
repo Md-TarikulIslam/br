@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import nav from "../../../images/nav.png";
-import foo from "../../../images/foo.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Loading from "../../../assests/loading.svg";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import Loading from "../assests/loading.svg";
 
 const countries = [
     "England",
@@ -88,9 +88,7 @@ const Homepage = () => {
     return (
         <div>
             {/* navbar */}
-            <nav>
-                <img className="w-full" src={nav} alt="" />
-            </nav>
+            <Navbar />
 
             {/* main body */}
             <main className="mx-auto max-w-screen-xl">
@@ -127,7 +125,9 @@ const Homepage = () => {
                                     >
                                         <div className="flex items-center">
                                             <div className="flex-1 flex flex-col-reverse md:flex-row items-center gap-5 justify-start">
-                                                <p className="font-bold text-center text-lg md:text-xl">{stat.teams.home.name}</p>
+                                                <p className="font-bold text-center text-lg md:text-xl">
+                                                    {stat.teams.home.name}
+                                                </p>
                                                 <img
                                                     className="w-14 h-14"
                                                     src={stat.teams.home.logo}
@@ -141,7 +141,9 @@ const Homepage = () => {
                                                     src={stat.teams.away.logo}
                                                     alt={`${stat.teams.away.name} logo`}
                                                 />
-                                                <p className="font-bold text-center text-lg md:text-xl">{stat.teams.away.name}</p>
+                                                <p className="font-bold text-center text-lg md:text-xl">
+                                                    {stat.teams.away.name}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -155,9 +157,7 @@ const Homepage = () => {
             </main>
 
             {/* footer */}
-            <footer>
-                <img className="w-full grayscale" src={foo} alt="" />
-            </footer>
+            <Footer />
         </div>
     );
 };

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import nav from "../../../images/nav.png";
-import foo from "../../../images/foo.png";
 import axios from "axios";
-import Loading from "../../../assests/loading.svg";
+import Loading from "../assests/loading.svg";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Details = () => {
     const [statistics, setStatistics] = useState({});
@@ -12,9 +12,10 @@ const Details = () => {
     const fixtureId = localStorage.getItem("fixtureId");
     const fixture = JSON.parse(data);
     const limit = [15, 15, 50, 15, 25, 25, 25, 25, 15, 100, 10, 5, 25, 1000, 750, 100, 10];
-    const title = ["Form", "Attack", "Deffence", "Poisson Distribution", "Strength", "Goals"];
+    const title = ["Form", "Attack", "Deffence", "Poisson Distribution", "Strength", "Goals", "Total"];
     const [date, setDate] = useState(null);
     const [predict, setPredict] = useState([]);
+    const [h2h, setH2h] = useState("");
 
     const fetchStatistics = async () => {
         setLoading(true);
@@ -61,12 +62,38 @@ const Details = () => {
         }
     };
 
+    const fetchH2HTwoTeams = async () => {
+        setLoading(true);
+        const options = {
+            method: "GET",
+            url: "https://api-football-v1.p.rapidapi.com/v3/fixtures/headtohead",
+            params: { h2h: `${fixture.teams.home.id}-${fixture.teams.away.id}` },
+            headers: {
+                "X-RapidAPI-Key": "b6e89817d6msh36107de73277139p116779jsne307fb015e33",
+                "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+            },
+        };
+
+        try {
+            const response = await axios.request(options);
+            setH2h(response.data.response);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchStatistics();
     }, []);
 
     useEffect(() => {
         fetchPredictions();
+    }, []);
+
+    useEffect(() => {
+        fetchH2HTwoTeams();
     }, []);
 
     const mergedStatistics = [];
@@ -118,12 +145,30 @@ const Details = () => {
         }
     }
 
+    let homeWins = 0;
+    let awayWins = 0;
+    let totalHomeGoals = 0;
+    let totalAwayGoals = 0;
+
+    for (const match of h2h) {
+        // Check if the home team is the winner.
+        if (match.teams.home.winner === true) {
+            homeWins++;
+        }
+        // Check if the away team is the winner.
+        if (match.teams.away.winner === true) {
+            awayWins++;
+        }
+
+        // Add the goals scored in the match to the respective totals.
+        totalHomeGoals += match.goals.home;
+        totalAwayGoals += match.goals.away;
+    }
+
     return (
         <div>
             {/* navbar */}
-            <nav>
-                <img className="w-full" src={nav} alt="" />
-            </nav>
+            <Navbar />
 
             {/* main body */}
             <main className="mx-auto max-w-screen-xl my-5">
@@ -247,14 +292,40 @@ const Details = () => {
                                 </div>
 
                                 <div className="w-full flex justify-around items-center">
-                                    {/* <div className="hidden lg:flex bg-blue-500 w-44 h-44 rounded-full justify-center items-center flex-col text-white">
-                                        <p className="font-semibold">Win Percentage</p>
-                                        <p className="text-2xl font-black">{predict?.comparison?.total?.home}</p>
-                                    </div> */}
-
                                     <div className="w-full lg:w-[55%]">
+                                        <div className="w-full my-3">
+                                            <p className="text-center font-bold text-blue-600">Win</p>
+                                            <div className="flex items-center justify-between w-full gap-2 md:gap-3 lg:gap-4">
+                                                <div className="w-full">
+                                                    <div className="text-right">
+                                                        <p>{homeWins}</p>
+                                                    </div>
+                                                    <progress
+                                                        className={`${
+                                                            homeWins >= awayWins ? "progress_0" : "progress_1"
+                                                        } w-full !h-4`}
+                                                        style={{ direction: "rtl" }}
+                                                        value={homeWins}
+                                                        max={100}
+                                                    ></progress>
+                                                </div>
+                                                <div className="w-full">
+                                                    <div className="text-left">
+                                                        <p>{awayWins}</p>
+                                                    </div>
+                                                    <progress
+                                                        className={`${
+                                                            awayWins >= homeWins ? "progress_0" : "progress_1"
+                                                        } w-full !h-4`}
+                                                        value={awayWins}
+                                                        max={100}
+                                                    ></progress>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {newArray.map((item, idx) => (
-                                            <>
+                                            <div key={idx}>
                                                 {idx !== newArray.length - 1 && (
                                                     <div key={idx} className="w-full my-3">
                                                         <p className="text-center font-bold text-blue-600">
@@ -309,14 +380,44 @@ const Details = () => {
                                                         </div>
                                                     </div>
                                                 )}
-                                            </>
+                                            </div>
                                         ))}
-                                    </div>
 
-                                    {/* <div className="hidden lg:flex bg-blue-500 w-44 h-44 rounded-full justify-center items-center flex-col text-white">
-                                        <p className="font-semibold">Win Percentage</p>
-                                        <p className="text-2xl font-black">{predict?.comparison?.total?.away}</p>
-                                    </div> */}
+                                        <div className="w-full my-3">
+                                            <p className="text-center font-bold text-blue-600">Total Goals</p>
+                                            <div className="flex items-center justify-between w-full gap-2 md:gap-3 lg:gap-4">
+                                                <div className="w-full">
+                                                    <div className="text-right">
+                                                        <p>{totalHomeGoals}</p>
+                                                    </div>
+                                                    <progress
+                                                        className={`${
+                                                            totalHomeGoals >= totalAwayGoals
+                                                                ? "progress_0"
+                                                                : "progress_1"
+                                                        } w-full !h-4`}
+                                                        style={{ direction: "rtl" }}
+                                                        value={totalHomeGoals}
+                                                        max={300}
+                                                    ></progress>
+                                                </div>
+                                                <div className="w-full">
+                                                    <div className="text-left">
+                                                        <p>{totalAwayGoals}</p>
+                                                    </div>
+                                                    <progress
+                                                        className={`${
+                                                            totalAwayGoals >= totalHomeGoals
+                                                                ? "progress_0"
+                                                                : "progress_1"
+                                                        } w-full !h-4`}
+                                                        value={totalAwayGoals}
+                                                        max={100}
+                                                    ></progress>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -325,9 +426,7 @@ const Details = () => {
             </main>
 
             {/* footer */}
-            <footer>
-                <img className="w-full grayscale" src={foo} alt="" />
-            </footer>
+            <Footer />
         </div>
     );
 };
